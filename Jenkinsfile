@@ -185,7 +185,7 @@ pipeline {
         label 'jenkins-slave-mvn'
     }
     environment {
-        PROJECT_NAME = 'cr18-22'
+        PROJECT_NAME = 'human-review'
         KUBERNETES_NAMESPACE = "${ciProject}"
     }
     stages {
