@@ -29,8 +29,32 @@
   <name>Spring Boot - ConfigMap Booster</name>
   <description>Spring Boot - ConfigMap Booster</description>
 
+  <repositories>
+    <repository>
+      <id>redhat-ga</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>https://maven.repository.redhat.com/</url>
+    </repository>
+    <repository>
+      <id>redhat-ea</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+    </repository>
+  </repositories>
+
   <properties>
     <openshift-client.version>3.1.8</openshift-client.version>
+    <cucumber.version>2.3.1</cucumber.version>
   </properties>
 
   <dependencies>
@@ -42,6 +66,10 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
@@ -50,20 +78,22 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.jboss.arquillian.junit</groupId>
-      <artifactId>arquillian-junit-standalone</artifactId>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.arquillian.cube</groupId>
-      <artifactId>arquillian-cube-openshift</artifactId>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>io.undertow</groupId>
-          <artifactId>undertow-core</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.fabric8</groupId>
@@ -84,6 +114,40 @@
           </profiles>
           <classifier>exec</classifier>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jsonschema2pojo</groupId>
+        <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+        <version>0.5.1</version>
+        <configuration>
+          <annotationStyle>jackson2</annotationStyle>
+          <includeConstructors>true</includeConstructors>
+          <includeHashcodeAndEquals>true</includeHashcodeAndEquals>
+          <includeToString>true</includeToString>
+          <includeJsr303Annotations>true</includeJsr303Annotations>
+          <includeGetters>true</includeGetters>
+          <includeSetters>true</includeSetters>
+          <inclusionLevel>USE_DEFAULTS</inclusionLevel>
+          <initializeCollections>true</initializeCollections>
+          <outputDirectory>src/main/java</outputDirectory>
+          <targetPackage>gov.dhs.nppd.cr1822.data.entities</targetPackage>
+          <useBigDecimals>true</useBigDecimals>
+          <useBigIntegers>true</useBigIntegers>
+          <sourceType>jsonschema</sourceType>
+          <sourceDirectory>cti-stix2-json-schemas/schemas</sourceDirectory>
+          <sourcePaths>
+            <sourcePath>cti-stix2-json-schemas/schemas/common</sourcePath>
+            <sourcePath>cti-stix2-json-schemas/schemas/observables</sourcePath>
+            <sourcePath>cti-stix2-json-schemas/schemas/sdos</sourcePath>
+            <sourcePath>cti-stix2-json-schemas/schemas/sros</sourcePath>
+          </sourcePaths>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>3.2.1</version>
       </plugin>
     </plugins>
   </build>
